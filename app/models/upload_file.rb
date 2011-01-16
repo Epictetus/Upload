@@ -1,6 +1,6 @@
 class UploadFile < ActiveRecord::Base
 
-  @@directory = "public/upload"
+  @@directory = "public/images"
   attr_accessor :file, :filename
 
   def initialize(filename="")
@@ -10,23 +10,17 @@ class UploadFile < ActiveRecord::Base
   end
   
   def self.find(pattern)
-    FileUtils.mkdir_p 'public/upload'
-    if pattern == :all then pattern = "" end# to follow how other ruby libs work
-    files = self.cleanup_files(Dir.new(@@directory).entries)
-    files = self.filter_files(files, pattern)
-    upload_files = []
-    files.each do |f|
-      upload_files.push(UploadFile.new(f))
-    end
-    return upload_files
+    pattern = "" if pattern == :all
+    files = Dir.glob(File.join(@@directory, "*")).select{|f| File.file? f}.map{|f| File.basename(f)}
+    files = files.select{|f| f.index(pattern)}
+    files.map{|f| UploadFile.new(f)}
   end
   
   def self.create(file)
-    FileUtils.mkdir_p 'public/upload'
     filename = file.original_filename.gsub(" ", "_")
     path = File.join(@@directory, filename)
     File.open(path, "w+") { |f| f.write(file.read) }
-    return UploadFile.new(filename)
+    UploadFile.new(filename)
   end
   
   def delete
@@ -36,22 +30,6 @@ class UploadFile < ActiveRecord::Base
     rescue
       return false
     end
-  end
-  
-  def self.cleanup_files(files_array)
-    files_array.delete(".")
-    files_array.delete("..")
-    return files_array
-  end
-  
-  def self.filter_files(files, pattern)
-    new_files = []
-    files.each do |f|
-      if f.index(pattern)
-        new_files.push(f)
-      end
-    end
-    return new_files
   end
 
 end

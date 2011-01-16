@@ -8,11 +8,11 @@ class UploadExtension < Radiant::Extension
   end
   
   def activate
-    admin.tabs.add "Upload", "/admin/upload", :after => "Layouts", :visibility => [:all]
+    admin.tabs.add "ImageUpload", "/admin/upload", :after => "Layouts", :visibility => [:all]
   end
   
   def deactivate
-    admin.tabs.remove "Upload"
+    admin.tabs.remove "ImageUpload"
   end
   
 end

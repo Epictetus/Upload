@@ -1,16 +1,16 @@
-%h3 Upload new files
+%h3 Upload new image files
 %form{:action=>"/admin/upload/upload",:method=>"post",:enctype=>"multipart/form-data"}
   %input{ :type => "file", :name => "file" }
   %input{:type=>"submit",:value=>"Upload"}
 %hr{ 'border' => 'none', 'height' => '1px', 'background' => '#000' }
-%h3 Uploaded files
+%h3 Image files
 %table{"cellpadding" => "4", "width" => "100%"}
   %tr
     %th{"style" => "text-align: left;"}
       Filename
-    %th
+    %th{"style" => "text-align: center;"}
       Created Date
-    %th
+    %th{"style" => "text-align: center;"}
       Options
   - col = 0
   - @files.each do |f|
@@ -18,15 +18,15 @@
     %tr
       - if (col%2 == 1)
         %td{"style" => "background-color:#EBECED;"}
-          %a{ "href" => "/upload/#{f.filename}" }= f.filename
+          %a{ "href" => "/images/#{f.filename}" }= f.filename
         %td{"style" => "text-align:center; background-color:#EBECED;"}
           = f.file.mtime.strftime("%Y-%m-%d")
         %td{"style" => "text-align:center; background-color:#EBECED;"}
-          %a{ "href" => "/admin/upload/delete?file=#{f.filename}" } delete
+          %a{ "href" => "/admin/upload/delete?file=#{f.filename}", "onclick" => "if (!confirm('Delete #{f.filename} ?')) return false;"} delete
       - else
         %td{"style" => "background-color:#A4CDED;"}
           %a{ "href" => "/upload/#{f.filename}" }= f.filename
         %td{"style" => "text-align:center; background-color:#A4CDED;"}
           = f.file.mtime.strftime("%Y-%m-%d")
         %td{"style" => "text-align:center; background-color:#A4CDED;"}
-          %a{ "href" => "/admin/upload/delete?file=#{f.filename}" } delete
+          %a{ "href" => "/admin/upload/delete?file=#{f.filename}", "onclick" => "if (!confirm('Delete #{f.filename} ?')) return false;"} delete
